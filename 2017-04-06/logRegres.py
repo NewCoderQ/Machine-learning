@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*- 
 
 '''
+	Machine Learning in Active
 	Logistic Regressiion
 	Date: 06/04/2017
 '''
