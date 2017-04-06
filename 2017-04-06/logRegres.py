@@ -63,6 +63,19 @@ def drawBestFit(weights):
 	plt.show()
 
 
+# stochastic gradient ascent
+def stocGradAscent0(dataMatrix, classLabels):
+	m,n = np.shape(dataMatrix)
+	alpha = 0.01
+	weights = np.ones(n)
+	for i in range(m):
+		h = sigmoid(sum(dataMatrix[i] * weights))
+		error = classLabels[i] - h
+		weights = weights + alpha * error * dataMatrix[i]
+	return weights
+
+
 if __name__ == '__main__':
 	dataArr, labelMat = loadDataSet()
 	drawBestFit(gradAscent(dataArr, labelMat).getA())
+	drawBestFit(stocGradAscent0(np.array(dataArr), labelMat))
