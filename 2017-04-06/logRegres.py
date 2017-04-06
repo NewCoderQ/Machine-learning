@@ -75,7 +75,24 @@ def stocGradAscent0(dataMatrix, classLabels):
 	return weights
 
 
+# improved stochastic gradient ascent
+def stocGradAscent1(dataMatrix, classLabels, numIter = 150):
+	m, n = np.shape(dataMatrix)
+	weights = np.ones(n)
+	for j in range(numIter):
+		dataIndex = range(m)
+		for i in range(m):
+			alpha = 4 / (1.0 + j + i) + 0.01
+			randIndex = int(np.random.uniform(0, len(dataIndex)))		# create random index
+			h = sigmoid(sum(dataMatrix[randIndex] * weights))
+			error = classLabels[randIndex] - h
+			weights = weights + alpha * error * dataMatrix[randIndex]
+			del(dataIndex[randIndex])
+
+	return weights
+
 if __name__ == '__main__':
 	dataArr, labelMat = loadDataSet()
 	drawBestFit(gradAscent(dataArr, labelMat).getA())
 	drawBestFit(stocGradAscent0(np.array(dataArr), labelMat))
+	drawBestFit(stocGradAscent1(np.array(dataArr), labelMat))
