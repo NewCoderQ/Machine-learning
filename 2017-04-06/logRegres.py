@@ -91,8 +91,55 @@ def stocGradAscent1(dataMatrix, classLabels, numIter = 150):
 
 	return weights
 
+# ***********************************horse prediction*************************************
+def classifyVector(inX, weights):
+	prob = sigmoid(sum(inX * weights))
+	if prob > 0.5: 
+		return 1.0
+	else:
+		return 0.0
+
+def colicTest():
+	frTrain = open('horseColicTraining.txt')
+	frTest = open('horseColicTest.txt')
+
+	# train 
+	trainingSet = []; trainingLabel = []
+	for line in frTrain.readlines():
+		currentLine = line.strip().split('\t')
+		lineArr = []
+		for i in range(21):							# the first 21 values
+			lineArr.append(float(currentLine[i]))	# save into a list
+		trainingSet.append(lineArr)
+		trainingLabel.append(float(currentLine[21]))
+	trainWeights = stocGradAscent1(np.array(trainingSet), trainingLabel, 500)
+	
+	# test
+	errorCount = 0; numTestVec = 0.0
+	for line in frTest.readlines():
+		numTestVec += 1.0
+		currentLine = line.strip().split('\t')
+		lineArr = []
+		for i in range(21):
+			lineArr.append(float(currentLine[i]))
+		if int(classifyVector(np.array(lineArr), trainWeights)) != int(currentLine[21]):
+			errorCount += 1
+
+	# result
+	errorRate = (float(errorCount) / numTestVec)
+	print 'the error rate of this test is: %f' % errorRate
+	return errorRate
+
+def multiTest():
+	numTests = 10; errorSum = 0.0
+	for k in range(numTests):
+		errorSum += colicTest()
+	print 'after %d iterations the average error rate is %f' % (numTests, errorSum / float(numTests))
+
+
 if __name__ == '__main__':
 	dataArr, labelMat = loadDataSet()
-	drawBestFit(gradAscent(dataArr, labelMat).getA())
-	drawBestFit(stocGradAscent0(np.array(dataArr), labelMat))
-	drawBestFit(stocGradAscent1(np.array(dataArr), labelMat))
+	# drawBestFit(gradAscent(dataArr, labelMat).getA())
+	# drawBestFit(stocGradAscent0(np.array(dataArr), labelMat))
+	# drawBestFit(stocGradAscent1(np.array(dataArr), labelMat))
+	multiTest()
