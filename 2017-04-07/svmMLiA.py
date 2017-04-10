@@ -29,16 +29,11 @@ def selectJrand(i, m):
 def clipAlpha(aj, H, L):
 	if aj > H:
 		aj = H
-<<<<<<< HEAD
-	if aj < L:
-=======
 	if L > aj:
->>>>>>> cee1edc28e4e1ecf9bffdecf4d8777b98fb3d769
 		aj = L
 	return aj  
 
 # sequential minimal optimization
-<<<<<<< HEAD
 # 参数：数据集，类别标签，常数C，容错率，推出前最大的循环次数
 def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
 	dataMatrix = np.mat(dataMatIn)					# 100 * 2
@@ -96,62 +91,15 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
 				alphas[i] += labelMat[j] * labelMat[i] * (alphaJold - alphas[j])
 
 				# 对新生成的alpha[i],alpha[j]设置新的b值，进行下一次计算
-=======
-def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
-	dataMatrix = np.mat(dataMatIn)					# 100 * 2
-	labelMat = np.mat(classLabels).transpose()		# 100 * 1
-	b = 0; m, n = np.shape(dataMatrix)				# 100, 2
-	alphas = np.mat(np.zeros((m, 1)))				# 100 * 1, 0
-	iter = 0
-	index = 0
-	while (iter < maxIter):							# condition
-		index += 1
-		alphaPairsChanged = 0
-		for i in range(m):
-			fXi = float(np.multiply(alphas, labelMat).T * 					# m * m transpose	
-					   	(dataMatrix * dataMatrix[i, :].T)) + b				# predict label
-			# print np.shape(dataMatrix[i, :])	
-			Ei = fXi - float(labelMat[i])									# error value
-			if ((labelMat[i] * Ei < -toler) and (alphas[i] < C)) or \
-				((labelMat[i] * Ei > toler) and (alphas[i] > 0)):
-				j = selectJrand(i, m)										# select another alpha
-				fXj = float(np.multiply(alphas, labelMat).T *				# predict label
-							(dataMatrix * dataMatrix[j, :].T)) + b
-				Ej = fXj - float(labelMat[j])								# error value
-				alphaIold = alphas[i].copy()
-				alphaJold = alphas[j].copy()
-				if (labelMat[i] != labelMat[j]):							# two labels are different
-					L = max(0, alphas[j] - alphas[i])						# max
-					H = min(C, C + alphas[j] - alphas[i])					# min
-				else:
-					L = max(0, alphas[j] + alphas[i] - C)
-					H = min(C, alphas[j] + alphas[i])
-
-				print "index = ", index, "L = ", L, "H = ", H
-				if L == H: print "L == H", L, alphas[j], alphas[i]; continue
-				eta = 2.0 * dataMatrix[i, :] * dataMatrix[j, :].T - \
-						dataMatrix[i, :] * dataMatrix[i, :].T - \
-						dataMatrix[j, :] * dataMatrix[j, :].T
-				if eta >= 0: print "eta >= 0"; continue
-				alphas[j] -= labelMat[j] * (Ei - Ej) / eta
-				alphas[j] = clipAlpha(alphas[i], H, L)
-				if(abs(alphas[j] - alphaJold) < 0.00001):
-					print "j not moving enouth"; continue
-				alphas[i] += labelMat[j] * labelMat[i] * (alphaJold - alphas[j])
->>>>>>> cee1edc28e4e1ecf9bffdecf4d8777b98fb3d769
 				b1 = b - Ei - labelMat[i] * (alphas[i] - alphaIold) * \
 					dataMatrix[i, :] * dataMatrix[i, :].T - \
 					labelMat[j] * (alphas[j] - alphaJold) * \
 					dataMatrix[i, :] * dataMatrix[j, :].T
-<<<<<<< HEAD
 
-=======
->>>>>>> cee1edc28e4e1ecf9bffdecf4d8777b98fb3d769
 				b2 = b - Ej - labelMat[i] * (alphas[i] - alphaIold) * \
 					dataMatrix[i, :] * dataMatrix[j, :].T - \
 					labelMat[j] * (alphas[j] - alphaJold) * \
 					dataMatrix[j, :] * dataMatrix[j, :].T
-<<<<<<< HEAD
 
 				if (0 < alphas[i]) and (C > alphas[i]) : b = b1
 				elif (0 < alphas[j]) and (C > alphas[j]) : b = b2
@@ -161,16 +109,6 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
 		if (alphaPairsChanged == 0):						# 继续循环
 			iter += 1
 		else:												# 重新进行循环
-=======
-				if (0 < alphas[i]) and (C > alphas[i]) : b = b1
-				elif (0 < alphas[j]) and (C > alphas[j]) : b = b2
-				else: b = (b1 + b2) / 2.0
-				alphaPairsChanged += 1
-				print "iter: %d i: %d, pairs changed %d" % (iter, i, alphaPairsChanged)
-		if (alphaPairsChanged == 0):
-			iter += 1
-		else:
->>>>>>> cee1edc28e4e1ecf9bffdecf4d8777b98fb3d769
 			iter = 0
 		print "iteration number: %d" % iter
 	return b, alphas
@@ -180,8 +118,4 @@ def smoSimple(dataMatIn, classLabels, C, toler, maxIter):
 if __name__ == '__main__':
 	dataArr, labelArr = loadDataSet('testSet.txt')
 	b, alphas = smoSimple(dataArr, labelArr, 0.6, 0.001, 40)
-<<<<<<< HEAD
 	print b, alphas[alphas > 0]
-=======
-	print b
->>>>>>> cee1edc28e4e1ecf9bffdecf4d8777b98fb3d769
