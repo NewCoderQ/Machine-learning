@@ -2,7 +2,7 @@
 
 '''
 	Machine Learning in Active
-	Logistic Regressiion
+	Logistic Regression
 	Date: 06/04/2017
 '''
 
